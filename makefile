@@ -5,11 +5,15 @@ CONTAINER_NAME := golang-restaurant-container
 # Targets
 install:
 	go mod tidy
+	swag init -g ./cmd/server/main.go
 lint:
 	golangci-lint run
 
 seed:
 	go run ./cmd/seed/seed.go
+
+docs:
+	swag init -g ./cmd/server/main.go
 
 dev:
 	go run ./cmd/server

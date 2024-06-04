@@ -23,8 +23,13 @@ func NewHandler(app *app.App) *Handler {
 	}
 }
 
-// GetUsers handles requests to fetch users
-
+// @Summary Get all users
+// @Description Get details of all users
+// @Tags users
+// @Accept json
+// @Produce json
+// @Success 200 {array} entity.ResponseUser
+// @Router /users [get]
 func (h *Handler) GetUsers(w http.ResponseWriter, r *http.Request) {
 	// Implement GetUsers handler
 	users, err := h.App.GetUsers(r)

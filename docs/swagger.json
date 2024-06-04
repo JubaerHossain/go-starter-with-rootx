@@ -1,7 +1,92 @@
 {
     "swagger": "2.0",
     "info": {
-        "contact": {}
+        "description": "This is a sample server.",
+        "title": "API Documentation",
+        "contact": {},
+        "version": "1.0"
     },
-    "paths": {}
+    "host": "localhost:3021",
+    "basePath": "/api",
+    "paths": {
+        "/users": {
+            "get": {
+                "description": "Get details of all users",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "users"
+                ],
+                "summary": "Get all users",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/entity.ResponseUser"
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "definitions": {
+        "entity.ResponseUser": {
+            "type": "object",
+            "properties": {
+                "created_at": {
+                    "type": "string"
+                },
+                "id": {
+                    "type": "integer"
+                },
+                "phone": {
+                    "type": "string"
+                },
+                "role": {
+                    "$ref": "#/definitions/entity.Role"
+                },
+                "status": {
+                    "$ref": "#/definitions/entity.Status"
+                },
+                "username": {
+                    "type": "string"
+                }
+            }
+        },
+        "entity.Role": {
+            "type": "string",
+            "enum": [
+                "admin",
+                "manager",
+                "user"
+            ],
+            "x-enum-varnames": [
+                "AdminRole",
+                "ManagerRole",
+                "UserRole"
+            ]
+        },
+        "entity.Status": {
+            "type": "string",
+            "enum": [
+                "active",
+                "inactive",
+                "pending",
+                "deleted"
+            ],
+            "x-enum-varnames": [
+                "Active",
+                "Inactive",
+                "Pending",
+                "Deleted"
+            ]
+        }
+    }
 }

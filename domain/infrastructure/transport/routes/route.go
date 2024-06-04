@@ -20,14 +20,6 @@ func WebRouter(application *app.App) http.Handler {
 	// Register monitoring endpoint
 	router.Handle("/metrics", monitor.MetricsHandler())
 
-	// Swagger endpoint
-	router.Handle("/swagger/", http.StripPrefix("/swagger/", http.FileServer(http.Dir("swagger-ui"))))
-
-	// Serve Swagger JSON/YAML
-	router.HandleFunc("/swagger.yaml", func(w http.ResponseWriter, r *http.Request) {
-		http.ServeFile(w, r, "swagger.yaml")
-	})
-
 	// Default route
 	router.Handle("/", middleware.LimiterMiddleware(middleware.LoggingMiddleware(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		utils.WriteJSONResponse(w, http.StatusOK, map[string]interface{}{"message": "Welcome to the API"})

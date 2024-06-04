@@ -1,4 +1,64 @@
+basePath: /api
+definitions:
+  entity.ResponseUser:
+    properties:
+      created_at:
+        type: string
+      id:
+        type: integer
+      phone:
+        type: string
+      role:
+        $ref: '#/definitions/entity.Role'
+      status:
+        $ref: '#/definitions/entity.Status'
+      username:
+        type: string
+    type: object
+  entity.Role:
+    enum:
+    - admin
+    - manager
+    - user
+    type: string
+    x-enum-varnames:
+    - AdminRole
+    - ManagerRole
+    - UserRole
+  entity.Status:
+    enum:
+    - active
+    - inactive
+    - pending
+    - deleted
+    type: string
+    x-enum-varnames:
+    - Active
+    - Inactive
+    - Pending
+    - Deleted
+host: localhost:3021
 info:
   contact: {}
-paths: {}
+  description: This is a sample server.
+  title: API Documentation
+  version: "1.0"
+paths:
+  /users:
+    get:
+      consumes:
+      - application/json
+      description: Get details of all users
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/entity.ResponseUser'
+            type: array
+      summary: Get all users
+      tags:
+      - users
 swagger: "2.0"

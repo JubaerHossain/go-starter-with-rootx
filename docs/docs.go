@@ -14,17 +14,97 @@ const docTemplate = `{
     },
     "host": "{{.Host}}",
     "basePath": "{{.BasePath}}",
-    "paths": {}
+    "paths": {
+        "/users": {
+            "get": {
+                "description": "Get details of all users",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "users"
+                ],
+                "summary": "Get all users",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/entity.ResponseUser"
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "definitions": {
+        "entity.ResponseUser": {
+            "type": "object",
+            "properties": {
+                "created_at": {
+                    "type": "string"
+                },
+                "id": {
+                    "type": "integer"
+                },
+                "phone": {
+                    "type": "string"
+                },
+                "role": {
+                    "$ref": "#/definitions/entity.Role"
+                },
+                "status": {
+                    "$ref": "#/definitions/entity.Status"
+                },
+                "username": {
+                    "type": "string"
+                }
+            }
+        },
+        "entity.Role": {
+            "type": "string",
+            "enum": [
+                "admin",
+                "manager",
+                "user"
+            ],
+            "x-enum-varnames": [
+                "AdminRole",
+                "ManagerRole",
+                "UserRole"
+            ]
+        },
+        "entity.Status": {
+            "type": "string",
+            "enum": [
+                "active",
+                "inactive",
+                "pending",
+                "deleted"
+            ],
+            "x-enum-varnames": [
+                "Active",
+                "Inactive",
+                "Pending",
+                "Deleted"
+            ]
+        }
+    }
 }`
 
 // SwaggerInfo holds exported Swagger Info so clients can modify it
 var SwaggerInfo = &swag.Spec{
-	Version:          "",
-	Host:             "",
-	BasePath:         "",
+	Version:          "1.0",
+	Host:             "localhost:3021",
+	BasePath:         "/api",
 	Schemes:          []string{},
-	Title:            "",
-	Description:      "",
+	Title:            "API Documentation",
+	Description:      "This is a sample server.",
 	InfoInstanceName: "swagger",
 	SwaggerTemplate:  docTemplate,
 	LeftDelim:        "{{",
