@@ -1,7 +1,186 @@
 # Rootx
 
+██████╗ ██╗   ██╗███████╗██╗ ██████╗██████╗ ██╗██╗   ██╗██╗     ███████╗██████╗ 
+██╔══██╗██║   ██║██╔════╝██║██╔════╝██╔══██╗██║██║   ██║██║     ██╔════╝██╔══██╗
+██║  ██║██║   ██║█████╗  ██║██║     ██████╔╝██║██║   ██║██║     █████╗  ██████╔╝
+██║  ██║██║   ██║██╔══╝  ██║██║     ██╔══██╗██║╚██╗ ██╔╝██║     ██╔══╝  ██╔══██╗
+██████╔╝╚██████╔╝██║     ██║╚██████╗██║  ██║██║ ╚████╔╝ ███████╗███████╗██║  ██║
+╚═════╝  ╚═════╝ ╚═╝     ╚═╝ ╚═════╝╚═╝  ╚═╝╚═╝  ╚═══╝  ╚══════╝╚══════╝╚═╝  ╚═╝
+
+
 ## Overview
 This project is structured to demonstrate a comprehensive web application with a variety of features, including authentication, caching, database interaction, middleware for HTTP requests, and background task processing. It is organized into different directories, each serving a distinct purpose.
+
+
+
+## Getting Started
+
+### Prerequisites
+
+- Go 1.16 or higher
+- Docker
+- Docker Compose
+- Node.js
+
+### Installation
+
+1. Clone the repository:
+    ```sh
+    git clone https://github.com/JubaerHossain/rootx.git
+    cd rootx
+    ```
+
+2. Build and run the application using Docker Compose:
+    ```sh
+    docker-compose up --build
+    ```
+
+3. Access the application at `http://localhost:8080`.
+
+### Usage
+
+- To start the server:
+    ```sh
+    go run cmd/main.go
+    ```
+
+- To run tests:
+    ```sh
+    go test ./...
+    ```
+
+
+## install dependencies
+
+```bash
+make install
+```
+
+## run the project [development mode]
+
+```bash
+make dev
+```
+
+```bash
+Select a command:
+1. Create Migration
+2. Create Migration with Seeder
+3. Apply Migrations
+4. Run Seeders
+Enter the command number: 4
+Running seeders...
+2024/06/04 19:35:32 seeds files executed successfully
+Task completed successfully
+```
+
+
+## create a new migration example [select 1]
+
+```bash
+make rootx 
+```
+## run the migration [select 2]
+
+```bash
+make rootx
+
+```
+
+## seed the database [select 3]
+
+```bash
+make rootx
+```
+## create a new module
+
+```bash
+make command name=module_name
+```
+
+## build the project
+
+```bash
+make build
+```
+
+## run the project [production mode]
+
+```bash
+make run
+```
+
+### uses database postgres
+
+```bash
+sudo -u postgres psql postgres
+```
+
+### Code check by golangci-lint [linting and formatting code](https://golangci-lint.run/welcome/quick-start/)
+
+```bash
+make lint
+```
+
+### docker volume list
+
+```bash
+docker volume ls
+```
+
+## docker volume remove
+
+```bash
+docker volume rm <volume_name>
+```
+
+## docker shell
+
+```bash
+docker exec -it <container_id> /bin/sh
+```
+
+or
+
+```bash
+docker exec -it <container_id> bash
+```
+
+## docker postgres
+
+```bash
+docker run --name postgres -e POSTGRES_PASSWORD=postgres -d -p 5432:5432 postgres
+```
+
+## docker postgres with volume
+
+```bash
+docker run --name postgres -e POSTGRES_PASSWORD=postgres -d -p 5432:5432 -v postgres:/var/lib/postgresql/data postgres
+```
+
+## docker postgres with volume and password
+
+```bash
+docker run --name postgres -e POSTGRES_PASSWORD=postgres -d -p 5432:5432 -v postgres:/var/lib/postgresql/data postgres
+```
+
+## docker postgres with volume and password and user
+
+```bash
+docker run --name postgres -e POSTGRES_PASSWORD=postgres -e POSTGRES_USER=postgres -d -p 5432:5432 -v postgres:/var/lib/postgresql/data postgres
+```
+
+## docker postgres with volume and password and user and database
+
+```bash
+docker run --name postgres -e POSTGRES_PASSWORD=postgres -e POSTGRES_USER=postgres -e POSTGRES_DB=restaurant-api -d -p 5432:5432 -v postgres:/var/lib/postgresql/data postgres
+```
+
+## postgres shell
+
+```bash
+psql -h localhost -U postgres
+```
 
 ## Directory Structure
 
@@ -159,173 +338,6 @@ project
 - **postcss.config.js**: PostCSS configuration.
 - **tailwind.config.js**: Tailwind CSS configuration.
 
-## Getting Started
-
-### Prerequisites
-
-- Go 1.16 or higher
-- Docker
-- Docker Compose
-- Node.js
-
-### Installation
-
-1. Clone the repository:
-    ```sh
-    git clone https://github.com/JubaerHossain/rootx.git
-    cd rootx
-    ```
-
-2. Build and run the application using Docker Compose:
-    ```sh
-    docker-compose up --build
-    ```
-
-3. Access the application at `http://localhost:8080`.
-
-### Usage
-
-- To start the server:
-    ```sh
-    go run cmd/main.go
-    ```
-
-- To run tests:
-    ```sh
-    go test ./...
-    ```
-
-
-## install dependencies
-
-```bash
-make install
-```
-
-## run the project [development mode]
-
-```bash
-make dev
-```
-
-```bash
-Select a command:
-1. Create Migration
-2. Create Migration with Seeder
-3. Apply Migrations
-4. Run Seeders
-Enter the command number: 4
-Running seeders...
-2024/06/04 19:35:32 seeds files executed successfully
-Task completed successfully
-```
-
-## create a new migration example [select 1]
-
-```bash
-make rootx 
-```
-## run the migration [select 2]
-
-```bash
-make rootx
-
-```
-
-## seed the database [select 3]
-
-```bash
-make rootx
-```
-## create a new module
-
-```bash
-make command name=module_name
-```
-
-## build the project
-
-```bash
-make build
-```
-
-## run the project [production mode]
-
-```bash
-make run
-```
-
-### uses database postgres
-
-```bash
-sudo -u postgres psql postgres
-```
-
-### Code check by golangci-lint [linting and formatting code](https://golangci-lint.run/welcome/quick-start/)
-
-```bash
-make lint
-```
-
-### docker volume list
-
-```bash
-docker volume ls
-```
-
-## docker volume remove
-
-```bash
-docker volume rm <volume_name>
-```
-
-## docker shell
-
-```bash
-docker exec -it <container_id> /bin/sh
-```
-
-or
-
-```bash
-docker exec -it <container_id> bash
-```
-
-## docker postgres
-
-```bash
-docker run --name postgres -e POSTGRES_PASSWORD=postgres -d -p 5432:5432 postgres
-```
-
-## docker postgres with volume
-
-```bash
-docker run --name postgres -e POSTGRES_PASSWORD=postgres -d -p 5432:5432 -v postgres:/var/lib/postgresql/data postgres
-```
-
-## docker postgres with volume and password
-
-```bash
-docker run --name postgres -e POSTGRES_PASSWORD=postgres -d -p 5432:5432 -v postgres:/var/lib/postgresql/data postgres
-```
-
-## docker postgres with volume and password and user
-
-```bash
-docker run --name postgres -e POSTGRES_PASSWORD=postgres -e POSTGRES_USER=postgres -d -p 5432:5432 -v postgres:/var/lib/postgresql/data postgres
-```
-
-## docker postgres with volume and password and user and database
-
-```bash
-docker run --name postgres -e POSTGRES_PASSWORD=postgres -e POSTGRES_USER=postgres -e POSTGRES_DB=restaurant-api -d -p 5432:5432 -v postgres:/var/lib/postgresql/data postgres
-```
-
-## postgres shell
-
-```bash
-psql -h localhost -U postgres
-```
 
 ## Features
 
