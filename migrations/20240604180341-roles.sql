@@ -1,6 +1,6 @@
 -- Migration roles
 
-CREATE TABLE IF NOT EXISTS roles (
+CREATE TABLE roles (
     id SERIAL PRIMARY KEY,
     name VARCHAR(100) NOT NULL,
     description TEXT NOT NULL,

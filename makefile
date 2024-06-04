@@ -2,28 +2,14 @@
 IMAGE_NAME := go-starter-image
 CONTAINER_NAME := go-starter-container
 
-# Targets
-migration-create:
-	@echo "Creating migration file..."
-	@echo "Migration name: $(name)"
-	@echo "Table name: $(table)"
-	@timestamp=$$(date +'%Y%m%d%H%M%S'); \
-	filename="migrations/$$timestamp-$(name).sql"; \
-	echo "-- Migration $(name)" > $$filename; \
-	echo "" >> $$filename; \
-	echo "CREATE TABLE IF NOT EXISTS $(name) (" >> $$filename; \
-	echo "    id SERIAL PRIMARY KEY," >> $$filename; \
-	echo "    name VARCHAR(100) NOT NULL," >> $$filename; \
-	echo "    description TEXT NOT NULL," >> $$filename; \
-	echo "    created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP," >> $$filename; \
-	echo "    updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP" >> $$filename; \
-	echo ");" >> $$filename; \
-	echo "Migration file created: $$filename"
+migration:
+	go run cmd/db/main.go create-migration name=$(name) table=$(table)
 
-migration-up:
-	@echo "Applying migrations..."
-	@psql postgres://$(name):$(password)@$(host):$(port)/$(dbname) -f migrations/*.sql
-	@echo "Migrations applied successfully"
+apply-migrations:
+	go run cmd/db/main.go apply-migrations
+
+run-seeders:
+	go run cmd/db/main.go run-seeders
 
 install:
 	go mod tidy
@@ -31,12 +17,6 @@ install:
 lint:
 	golangci-lint run
 
-seed:
-	@echo "Running seeders..."
-	@for file in seeds/*.sql; do \
-		psql postgres://$(name):$(password)@$(host):$(port)/$(dbname) -f $$file; \
-	done
-	@echo "Seeders executed successfully"
 
 docs:
 	swag init -g ./cmd/server/main.go
