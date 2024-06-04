@@ -208,6 +208,18 @@ make install
 make dev
 ```
 
+```bash
+Select a command:
+1. Create Migration
+2. Create Migration with Seeder
+3. Apply Migrations
+4. Run Seeders
+Enter the command number: 4
+Running seeders...
+2024/06/04 19:35:32 seeds files executed successfully
+Task completed successfully
+```
+
 ## create a new migration example [select 1]
 
 ```bash
