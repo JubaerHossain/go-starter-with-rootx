@@ -77,7 +77,7 @@ func VerifyToken(tokenString string) (bool, *userEntity.AuthUser, error) {
 				// Deserialize user data from the map
 				user := userEntity.AuthUser{
 					ID:       uint(int(userData["id"].(float64))),
-					Username: userData["username"].(string),
+					Name: userData["name"].(string),
 					Phone:    userData["phone"].(string),
 					Role:     entity.Role(userData["role"].(string)),
 					Status:   entity.Status(userData["status"].(string)),
