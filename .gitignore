@@ -1,0 +1,4 @@
+.env
+/cmd/server/tmp
+bin
+config.yaml

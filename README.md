@@ -195,6 +195,123 @@ project
     go test ./...
     ```
 
+
+## install dependencies
+
+```bash
+make install
+```
+
+## run the project [development mode]
+
+```bash
+make dev
+```
+
+## create a new module
+
+```bash
+make command name=module_name
+```
+
+## build the project
+
+```bash
+make build
+```
+
+## run the project [production mode]
+
+```bash
+make run
+```
+
+### uses database postgres
+
+```bash
+sudo -u postgres psql postgres
+```
+
+### Code check by golangci-lint [linting and formatting code](https://golangci-lint.run/welcome/quick-start/)
+
+```bash
+make lint
+```
+
+### docker volume list
+
+```bash
+docker volume ls
+```
+
+## docker volume remove
+
+```bash
+docker volume rm <volume_name>
+```
+
+## docker shell
+
+```bash
+docker exec -it <container_id> /bin/sh
+```
+
+or
+
+```bash
+docker exec -it <container_id> bash
+```
+
+## docker postgres
+
+```bash
+docker run --name postgres -e POSTGRES_PASSWORD=postgres -d -p 5432:5432 postgres
+```
+
+## docker postgres with volume
+
+```bash
+docker run --name postgres -e POSTGRES_PASSWORD=postgres -d -p 5432:5432 -v postgres:/var/lib/postgresql/data postgres
+```
+
+## docker postgres with volume and password
+
+```bash
+docker run --name postgres -e POSTGRES_PASSWORD=postgres -d -p 5432:5432 -v postgres:/var/lib/postgresql/data postgres
+```
+
+## docker postgres with volume and password and user
+
+```bash
+docker run --name postgres -e POSTGRES_PASSWORD=postgres -e POSTGRES_USER=postgres -d -p 5432:5432 -v postgres:/var/lib/postgresql/data postgres
+```
+
+## docker postgres with volume and password and user and database
+
+```bash
+docker run --name postgres -e POSTGRES_PASSWORD=postgres -e POSTGRES_USER=postgres -e POSTGRES_DB=restaurant-api -d -p 5432:5432 -v postgres:/var/lib/postgresql/data postgres
+```
+
+## postgres shell
+
+```bash
+psql -h localhost -U postgres
+```
+
+## Features
+
+- [x] Golang
+- [x] DDD
+- [x] Clean Architecture
+- [x] Docker
+- [x] Makefile
+- [x] Swagger
+- [x] Gorm
+- [x] JWT
+- [x] Viper
+- [x] Logger[Zap]
+- [x] Unit Test
+
 ## Contributing
 
 1. Fork the repository.

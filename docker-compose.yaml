@@ -1,0 +1,88 @@
+version: "3.8"
+
+services:
+  postgres_db:
+    image: postgres:latest
+    container_name: postgres_db
+    restart: always
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: stater_api
+    ports:
+      - "5432:5432" # Corrected port mapping
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    networks:
+      - backend_network
+
+  go_redis:
+    image: redis/redis-stack:latest
+    container_name: redis_container
+    restart: always
+    ports:
+      - "6380:6380" # Redis default port
+      - "8001:8001"
+    volumes:
+      - redis_data:/data
+    command: redis-server --port 6380 --requirepass password
+    networks:
+      - backend_network
+
+  app:
+    build:
+      context: .
+      dockerfile: ./docker/Dockerfile
+    container_name: golang_restaurant_container
+    image: golang_restaurant_image:latest
+    restart: always
+    ports:
+      - "3022:3022"
+    env_file:
+      - .env
+    links:
+      - postgres_db
+    depends_on:
+      - postgres_db
+    environment:
+      DB_HOST: postgres_db # Updated DB_HOST to use service name
+      DB_USER: postgres
+      DB_PASSWORD: password
+      DB_NAME: stater_api
+    networks:
+      - backend_network
+
+  pgadmin:
+    container_name: pgadmin
+    image: dpage/pgadmin4
+    restart: always
+    environment:
+      PGADMIN_DEFAULT_EMAIL: admin@pgadmin.com
+      PGADMIN_DEFAULT_PASSWORD: password
+    networks:
+      - backend_network
+    ports:
+      - "5050:80"
+    depends_on:
+      - postgres_db
+
+  # frondend_app:
+  #   build:
+  #     context: web
+  #     dockerfile: Dockerfile
+  #   container_name: frontend_container
+  #   restart: always
+  #   volumes:
+  #     - ./data/app:/app:cached
+  #   ports:
+  #     - "3021:3021"
+  #   networks:
+  #     - backend_network
+
+networks:
+  backend_network:
+    driver: bridge
+
+volumes:
+  postgres_data:
+  redis_data:
