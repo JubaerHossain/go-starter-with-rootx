@@ -11,9 +11,9 @@ import (
 	"github.com/JubaerHossain/restaurant-golang/pkg/core/app"
 )
 
-// @title           API Documentation
+// @title           Golang Starter API
 // @version         1.0
-// @description     This is a sample server.
+// @description     This is a starter API for Golang projects
 // @host            localhost:3021
 // @BasePath        /api
 func main() {
