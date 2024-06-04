@@ -208,22 +208,22 @@ make install
 make dev
 ```
 
-## create a new migration example : make migration-create name=roles 
+## create a new migration example [select 1]
 
 ```bash
-make create-migration
+make rootx 
 ```
-## run the migration
+## run the migration [select 2]
 
 ```bash
-make migrate
+make rootx
 
 ```
 
-## seed the database
+## seed the database [select 3]
 
 ```bash
-make seeds
+make rootx
 ```
 ## create a new module
 
