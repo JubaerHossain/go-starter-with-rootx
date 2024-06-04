@@ -33,10 +33,6 @@ func SeedUsers(db *gorm.DB, numUsers int) error {
 	if err := tx.Exec("DELETE FROM users").Error; err != nil {
 		return err
 	}
-	if err := tx.Exec("DELETE FROM user_logs").Error; err != nil {
-		return err
-	}
-	logger.Info("Deleted all users")
 
 	// Hash the default password
 	password, err := utilQuery.HashPassword("password")
@@ -47,7 +43,7 @@ func SeedUsers(db *gorm.DB, numUsers int) error {
 	// Loop through roles and create users
 	for i, role := range roles {
 		var user userEntity.User
-		user.Username = string(role)
+		user.Name = string(role)
 		user.Phone = fmt.Sprintf("0170000000%d", i+1)
 		user.Password = password
 		user.Role = role

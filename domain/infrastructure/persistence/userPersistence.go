@@ -76,7 +76,7 @@ func (r *UserRepositoryImpl) GetAllUsers(req *http.Request) (*entity.ResponsePag
 	// Iterate over the rows and parse the results
 	for rows.Next() {
 		var user entity.ResponseUser
-		err := rows.Scan(&user.ID, &user.Username) // Example scan, update according to your database schema
+		err := rows.Scan(&user.ID, &user.Name) // Example scan, update according to your database schema
 		if err != nil {
 			return nil, err
 		}
@@ -108,7 +108,7 @@ func (r *UserRepositoryImpl) GetAllUsers(req *http.Request) (*entity.ResponsePag
 func (r *UserRepositoryImpl) GetUserByID(userID uint) (*entity.User, error) {
 	// Implement logic to get user by ID
 	user := &entity.User{}
-	if err := r.app.DB.QueryRow(context.Background(), "SELECT id, username, phone FROM users WHERE id = $1", userID).Scan(&user.ID, &user.Username, &user.Phone); err != nil {
+	if err := r.app.DB.QueryRow(context.Background(), "SELECT id, name, phone FROM users WHERE id = $1", userID).Scan(&user.ID, &user.Name, &user.Phone); err != nil {
 		return nil, fmt.Errorf("user not found")
 	}
 	return user, nil
@@ -118,8 +118,8 @@ func (r *UserRepositoryImpl) GetUserByID(userID uint) (*entity.User, error) {
 func (r *UserRepositoryImpl) GetUser(userID uint) (*entity.ResponseUser, error) {
 	// Implement logic to get user by ID
 	resUser := &entity.ResponseUser{}
-	query := "SELECT id, username, phone FROM users WHERE id = $1"
-	if err := r.app.DB.QueryRow(context.Background(), query, userID).Scan(&resUser.ID, &resUser.Username, &resUser.Phone); err != nil {
+	query := "SELECT id, name, phone FROM users WHERE id = $1"
+	if err := r.app.DB.QueryRow(context.Background(), query, userID).Scan(&resUser.ID, &resUser.Name, &resUser.Phone); err != nil {
 		return nil, fmt.Errorf("user not found")
 	}
 	return resUser, nil
@@ -129,10 +129,10 @@ func (r *UserRepositoryImpl) GetUserDetails(userID uint) (*entity.ResponseUser, 
 	// Implement logic to get user details by ID
 	resUser := &entity.ResponseUser{}
 	err := r.app.DB.QueryRow(context.Background(), `
-		SELECT u.id, u.username, u.phone, u.role, u.status
+		SELECT u.id, u.name, u.phone, u.role, u.status
 		FROM users u
 		WHERE u.id = $1
-	`, userID).Scan(&resUser.ID, &resUser.Username, &resUser.Phone, &resUser.Role, &resUser.Status)
+	`, userID).Scan(&resUser.ID, &resUser.Name, &resUser.Phone, &resUser.Role, &resUser.Status)
 	if err != nil {
 		return nil, fmt.Errorf("user not found")
 	}
@@ -165,8 +165,8 @@ func (r *UserRepositoryImpl) CreateUser(user *entity.ValidateUser, req *http.Req
 
 	// Create the user within the transaction
 	_, err = tx.Exec(context.Background(), `
-		INSERT INTO users (username, phone, password) VALUES ($1, $2, $3)
-	`, user.Username, user.Phone, user.Password)
+		INSERT INTO users (name, phone, password) VALUES ($1, $2, $3)
+	`, user.Name, user.Phone, user.Password)
 	if err != nil {
 		tx.Rollback(context.Background())
 		return err
@@ -196,13 +196,13 @@ func (r *UserRepositoryImpl) UpdateUser(oldUser *entity.User, user *entity.Updat
 
 	query := `
 		UPDATE users
-		SET username = $1, phone = $2, role = $3, status = $4
+		SET name = $1, phone = $2, role = $3, status = $4
 		WHERE id = $5
-		RETURNING id, username, phone, role, status
+		RETURNING id, name, phone, role, status
 	`
-	row := tx.QueryRow(context.Background(), query, user.Username, user.Phone, user.Role, user.Status, oldUser.ID)
+	row := tx.QueryRow(context.Background(), query, user.Name, user.Phone, user.Role, user.Status, oldUser.ID)
 	updateUser := &entity.User{}
-	err = row.Scan(&updateUser.ID, &updateUser.Username, &updateUser.Phone, &updateUser.Role, &updateUser.Status)
+	err = row.Scan(&updateUser.ID, &updateUser.Name, &updateUser.Phone, &updateUser.Role, &updateUser.Status)
 	if err != nil {
 		tx.Rollback(context.Background())
 		return nil, err
@@ -310,10 +310,10 @@ func (r *UserRepositoryImpl) TerminateUser(oldUser *entity.User, user *entity.Te
 func (r *UserRepositoryImpl) Login(loginUser *entity.LoginUser) (*entity.LoginUserResponse, error) {
 	user := &entity.User{}
 	err := r.app.DB.QueryRow(context.Background(), `
-		SELECT id, username, phone, status, password
+		SELECT id, name, phone, status, password
 		FROM users
 		WHERE phone = $1
-	`, loginUser.Phone).Scan(&user.ID, &user.Username, &user.Phone, &user.Status, &user.Password)
+	`, loginUser.Phone).Scan(&user.ID, &user.Name, &user.Phone, &user.Status, &user.Password)
 	if err != nil {
 		return nil, fmt.Errorf("user not found")
 	}
@@ -329,7 +329,7 @@ func (r *UserRepositoryImpl) Login(loginUser *entity.LoginUser) (*entity.LoginUs
 
 	responseTokenUser := &entity.LoginUserResponse{
 		ID:       user.ID,
-		Username: user.Username,
+		Name: user.Name,
 		Phone:    user.Phone,
 		Status:   user.Status,
 		Token:    token,

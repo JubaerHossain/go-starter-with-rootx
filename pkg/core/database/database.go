@@ -4,6 +4,8 @@ import (
 	"context"
 	"fmt"
 	"log"
+	"os"
+	"path/filepath"
 	"time"
 
 	"github.com/JubaerHossain/rootx/pkg/core/config"
@@ -65,8 +67,33 @@ func (db *PgxDatabaseService) Close() {
 }
 
 func (db *PgxDatabaseService) Migrate() error {
-	// Add your migration logic here
-	log.Println("database migration completed")
+	return db.executeSQLFiles("migrations")
+}
+
+func (db *PgxDatabaseService) executeSQLFiles(directory string) error {
+	entries, err := os.ReadDir(directory)
+	if err != nil {
+		return fmt.Errorf("failed to read directory: %w", err)
+	}
+
+	for _, entry := range entries {
+		if entry.IsDir() {
+			continue
+		}
+
+		filePath := filepath.Join(directory, entry.Name())
+		content, err := os.ReadFile(filePath)
+		if err != nil {
+			return fmt.Errorf("failed to read file %s: %w", filePath, err)
+		}
+
+		_, err = db.pool.Exec(context.Background(), string(content))
+		if err != nil {
+			return fmt.Errorf("failed to execute file %s: %w", filePath, err)
+		}
+	}
+
+	log.Printf("%s files executed successfully", directory)
 	return nil
 }
 

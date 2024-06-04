@@ -6,10 +6,13 @@ import (
 	"net/http"
 
 	_ "github.com/JubaerHossain/rootx/docs"
-	"github.com/JubaerHossain/rootx/domain/infrastructure/transport/routes"
 	"github.com/JubaerHossain/rootx/domain/infrastructure/transport/routes/api"
 	"github.com/JubaerHossain/rootx/domain/infrastructure/transport/routes/web"
 	"github.com/JubaerHossain/rootx/pkg/core/app"
+	"github.com/JubaerHossain/rootx/pkg/core/health"
+	"github.com/JubaerHossain/rootx/pkg/core/middleware"
+	"github.com/JubaerHossain/rootx/pkg/core/monitor"
+	"github.com/JubaerHossain/rootx/pkg/utils"
 	httpSwagger "github.com/swaggo/http-swagger"
 )
 
@@ -47,7 +50,7 @@ func setupRoutes(application *app.App) http.Handler {
 	mux := http.NewServeMux()
 
 	// Register web routes
-	mux.Handle("/", web.WebRouter(application))
+	mux.Handle("/web", web.WebRouter(application))
 
 	// Register API routes
 	mux.Handle("/api/", http.StripPrefix("/api", api.APIRouter(application)))
@@ -55,7 +58,18 @@ func setupRoutes(application *app.App) http.Handler {
 	// Register Swagger routes
 	mux.Handle("/swagger/", httpSwagger.WrapHandler)
 
-	mux.Handle("/rootx", routes.Router(application))
+	// Register health check endpoint
+	mux.Handle("/health", middleware.LoggingMiddleware(http.HandlerFunc(health.HealthCheckHandler())))
 
-	return mux
+	// Register monitoring endpoint
+	mux.Handle("/metrics", monitor.MetricsHandler())
+
+	// Add Prometheus middleware to monitor all requests
+
+	// Default route
+	mux.Handle("/", middleware.LimiterMiddleware(middleware.LoggingMiddleware(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		utils.WriteJSONResponse(w, http.StatusOK, map[string]interface{}{"message": "Welcome to the API"})
+	}))))
+
+	return middleware.PrometheusMiddleware(mux, monitor.RequestsTotal(), monitor.RequestDuration())
 }

@@ -8,16 +8,16 @@ type LoginUser struct {
 }
 
 type LoginUserResponse struct {
-	ID       uint          `json:"id"`
-	Username string        `json:"username"`
-	Phone    string        `json:"phone"`
-	Status   entity.Status `json:"status"`
-	Token    string        `json:"token"`
+	ID     uint          `json:"id"`
+	Name   string        `json:"name"`
+	Phone  string        `json:"phone"`
+	Status entity.Status `json:"status"`
+	Token  string        `json:"token"`
 }
 type AuthUser struct {
-	ID       uint          `json:"id"`
-	Username string        `json:"username"`
-	Phone    string        `json:"phone"`
-	Role     entity.Role   `json:"role"`
-	Status   entity.Status `json:"status"`
+	ID     uint          `json:"id"`
+	Name   string        `json:"name"`
+	Phone  string        `json:"phone"`
+	Role   entity.Role   `json:"role"`
+	Status entity.Status `json:"status"`
 }
