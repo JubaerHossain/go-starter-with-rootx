@@ -1,10 +1,30 @@
 # Variables
-IMAGE_NAME := golang-restaurant-image
-CONTAINER_NAME := golang-restaurant-container
+IMAGE_NAME := go-starter-image
+CONTAINER_NAME := go-starter-container
 
 # Targets
-migrate-create:
-    migrate create -ext sql -dir migrations -seq $(name)
+migration-create:
+	@echo "Creating migration file..."
+	@echo "Migration name: $(name)"
+	@echo "Table name: $(table)"
+	@timestamp=$$(date +'%Y%m%d%H%M%S'); \
+	filename="migrations/$$timestamp-$(name).sql"; \
+	echo "-- Migration $(name)" > $$filename; \
+	echo "" >> $$filename; \
+	echo "CREATE TABLE IF NOT EXISTS $(name) (" >> $$filename; \
+	echo "    id SERIAL PRIMARY KEY," >> $$filename; \
+	echo "    name VARCHAR(100) NOT NULL," >> $$filename; \
+	echo "    description TEXT NOT NULL," >> $$filename; \
+	echo "    created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP," >> $$filename; \
+	echo "    updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP" >> $$filename; \
+	echo ");" >> $$filename; \
+	echo "Migration file created: $$filename"
+
+migration-up:
+	@echo "Applying migrations..."
+	@psql postgres://$(name):$(password)@$(host):$(port)/$(dbname) -f migrations/*.sql
+	@echo "Migrations applied successfully"
+
 install:
 	go mod tidy
 	swag init -g ./cmd/server/main.go
@@ -12,7 +32,11 @@ lint:
 	golangci-lint run
 
 seed:
-	go run ./cmd/seed/seed.go
+	@echo "Running seeders..."
+	@for file in seeds/*.sql; do \
+		psql postgres://$(name):$(password)@$(host):$(port)/$(dbname) -f $$file; \
+	done
+	@echo "Seeders executed successfully"
 
 docs:
 	swag init -g ./cmd/server/main.go
@@ -53,4 +77,4 @@ cpu:
 command:
 	go run ./cmd/clid create github.com/JubaerHossain/rootx ${name}
 
-.PHONY: install seed dev web build run deploy docker-stop docker-remove docker-clean command cpu docs migrate-create
+.PHONY: install seed dev web build run deploy docker-stop docker-remove docker-clean command cpu docs migrate-create migrate-up

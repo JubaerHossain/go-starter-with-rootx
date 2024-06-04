@@ -208,6 +208,23 @@ make install
 make dev
 ```
 
+## create a new migration example : make migration-create name=roles 
+
+```bash
+make migration name=migration_name  
+```
+## run the migration
+
+```bash
+make migration-up name=postgres password=password port=5433  host=localhost dbname=starter_api
+
+```
+
+## seed the database
+
+```bash
+make seed name=postgres password=password port=5433  host=localhost dbname=starter_api
+```
 ## create a new module
 
 ```bash
