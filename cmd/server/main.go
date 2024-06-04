@@ -4,11 +4,13 @@ import (
 	"fmt"
 	"log"
 	"net/http"
+
+	_ "github.com/JubaerHossain/rootx/docs"
+	"github.com/JubaerHossain/rootx/domain/infrastructure/transport/routes"
+	"github.com/JubaerHossain/rootx/domain/infrastructure/transport/routes/api"
+	"github.com/JubaerHossain/rootx/domain/infrastructure/transport/routes/web"
+	"github.com/JubaerHossain/rootx/pkg/core/app"
 	httpSwagger "github.com/swaggo/http-swagger"
-	_ "github.com/JubaerHossain/restaurant-golang/docs"
-	"github.com/JubaerHossain/restaurant-golang/domain/infrastructure/transport/routes"
-	"github.com/JubaerHossain/restaurant-golang/domain/infrastructure/transport/routes/api"
-	"github.com/JubaerHossain/restaurant-golang/pkg/core/app"
 )
 
 // @title           Golang Starter API
@@ -45,13 +47,15 @@ func setupRoutes(application *app.App) http.Handler {
 	mux := http.NewServeMux()
 
 	// Register web routes
-	mux.Handle("/", routes.WebRouter(application))
+	mux.Handle("/", web.WebRouter(application))
 
 	// Register API routes
 	mux.Handle("/api/", http.StripPrefix("/api", api.APIRouter(application)))
 
 	// Register Swagger routes
 	mux.Handle("/swagger/", httpSwagger.WrapHandler)
+
+	mux.Handle("/rootx", routes.Router(application))
 
 	return mux
 }

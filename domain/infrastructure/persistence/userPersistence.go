@@ -9,13 +9,13 @@ import (
 	"net/http"
 	"time"
 
-	"github.com/JubaerHossain/restaurant-golang/domain/entity"
-	"github.com/JubaerHossain/restaurant-golang/domain/repository"
-	"github.com/JubaerHossain/restaurant-golang/pkg/core/app"
-	"github.com/JubaerHossain/restaurant-golang/pkg/core/auth"
-	"github.com/JubaerHossain/restaurant-golang/pkg/core/cache"
-	"github.com/JubaerHossain/restaurant-golang/pkg/core/config"
-	utilQuery "github.com/JubaerHossain/restaurant-golang/pkg/query"
+	"github.com/JubaerHossain/rootx/domain/entity"
+	"github.com/JubaerHossain/rootx/domain/repository"
+	"github.com/JubaerHossain/rootx/pkg/core/app"
+	"github.com/JubaerHossain/rootx/pkg/core/auth"
+	"github.com/JubaerHossain/rootx/pkg/core/cache"
+	"github.com/JubaerHossain/rootx/pkg/core/config"
+	utilQuery "github.com/JubaerHossain/rootx/pkg/query"
 )
 
 type UserRepositoryImpl struct {

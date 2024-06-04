@@ -12,8 +12,8 @@ import (
 	"net/url"
 	"strconv"
 
-	coreEntity "github.com/JubaerHossain/restaurant-golang/pkg/core/entity"
-	"github.com/JubaerHossain/restaurant-golang/pkg/utils"
+	coreEntity "github.com/JubaerHossain/rootx/pkg/core/entity"
+	"github.com/JubaerHossain/rootx/pkg/utils"
 	"github.com/go-playground/validator/v10"
 	"golang.org/x/crypto/bcrypt"
 	"gorm.io/gorm"

@@ -1,4 +1,4 @@
-module github.com/JubaerHossain/restaurant-golang
+module github.com/JubaerHossain/rootx
 
 go 1.22.0
 

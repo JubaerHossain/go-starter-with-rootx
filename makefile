@@ -49,6 +49,6 @@ cpu:
 	echo "CPU Usage: "$[100-$(vmstat 1 2|tail -1|awk '{print $15}')]"%"
 
 command:
-	go run ./cmd/clid create github.com/JubaerHossain/restaurant-golang ${name}
+	go run ./cmd/clid create github.com/JubaerHossain/rootx ${name}
 
 .PHONY: install seed dev web build run deploy docker-stop docker-remove docker-clean command

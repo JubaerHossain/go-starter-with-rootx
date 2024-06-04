@@ -6,8 +6,8 @@ import (
 	"log"
 	"time"
 
-	"github.com/JubaerHossain/restaurant-golang/pkg/core/config"
-	"github.com/JubaerHossain/restaurant-golang/pkg/core/database/seed"
+	"github.com/JubaerHossain/rootx/pkg/core/config"
+	"github.com/JubaerHossain/rootx/pkg/core/database/seed"
 	"github.com/jackc/pgx/v5/pgxpool"
 )
 
@@ -27,9 +27,9 @@ func NewPgxDatabaseService() (*PgxDatabaseService, error) {
 	}
 
 	config.MaxConnIdleTime = 10 * time.Minute
-	config.MaxConnLifetime = 900 * time.Minute
-	config.MaxConns = 2000
-	config.MinConns = 500
+	config.MaxConnLifetime = 60 * time.Minute // Set to 1 hour
+	config.MaxConns = 5000                    // Adjust based on your environment
+	config.MinConns = 100                     // Adjust based on your environment
 
 	pool, err := pgxpool.NewWithConfig(context.Background(), config)
 	if err != nil {
@@ -42,16 +42,15 @@ func NewPgxDatabaseService() (*PgxDatabaseService, error) {
 	for i := 0; i < 3; i++ { // Retry logic
 		err := pool.Ping(ctx)
 		if err == nil {
+			log.Println("connected to database")
 			break
 		}
 		log.Printf("failed to ping database: %v (attempt %d)", err, i+1)
 		time.Sleep(2 * time.Second) // Wait before retrying
+		if i == 2 {                 // After the last attempt
+			return nil, fmt.Errorf("failed to ping database after multiple attempts: %w", err)
+		}
 	}
-	if err != nil {
-		return nil, fmt.Errorf("failed to ping database after multiple attempts: %w", err)
-	}
-
-	log.Println("connected to database")
 
 	return &PgxDatabaseService{pool: pool}, nil
 }
@@ -77,4 +76,9 @@ func (db *PgxDatabaseService) Seed() error {
 	}
 	log.Println("database seeding completed")
 	return nil
+}
+
+// PoolStats returns the statistics of the connection pool
+func (db *PgxDatabaseService) PoolStats() *pgxpool.Stat {
+	return db.pool.Stat()
 }

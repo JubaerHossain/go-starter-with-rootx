@@ -1,6 +1,6 @@
 package entity
 
-import "github.com/JubaerHossain/restaurant-golang/pkg/core/entity"
+import "github.com/JubaerHossain/rootx/pkg/core/entity"
 
 type LoginUser struct {
 	Phone    string `json:"phone" validate:"required,min=11,max=15"`

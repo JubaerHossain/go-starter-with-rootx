@@ -4,11 +4,11 @@ import (
 	"fmt"
 	"net/http"
 
-	"github.com/JubaerHossain/restaurant-golang/domain/application"
-	"github.com/JubaerHossain/restaurant-golang/domain/entity"
-	"github.com/JubaerHossain/restaurant-golang/pkg/core/app"
-	utilQuery "github.com/JubaerHossain/restaurant-golang/pkg/query"
-	"github.com/JubaerHossain/restaurant-golang/pkg/utils"
+	"github.com/JubaerHossain/rootx/domain/application"
+	"github.com/JubaerHossain/rootx/domain/entity"
+	"github.com/JubaerHossain/rootx/pkg/core/app"
+	utilQuery "github.com/JubaerHossain/rootx/pkg/query"
+	"github.com/JubaerHossain/rootx/pkg/utils"
 )
 
 // Handler handles API requests

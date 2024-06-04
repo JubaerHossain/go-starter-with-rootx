@@ -7,10 +7,10 @@ import (
 	"net/http"
 	"strconv"
 
-	"github.com/JubaerHossain/restaurant-golang/domain/entity"
-	"github.com/JubaerHossain/restaurant-golang/domain/infrastructure/persistence"
-	"github.com/JubaerHossain/restaurant-golang/domain/repository"
-	"github.com/JubaerHossain/restaurant-golang/pkg/core/app"
+	"github.com/JubaerHossain/rootx/domain/entity"
+	"github.com/JubaerHossain/rootx/domain/infrastructure/persistence"
+	"github.com/JubaerHossain/rootx/domain/repository"
+	"github.com/JubaerHossain/rootx/pkg/core/app"
 )
 
 type App struct {

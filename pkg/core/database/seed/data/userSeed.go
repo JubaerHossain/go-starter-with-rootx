@@ -4,10 +4,10 @@ import (
 	"fmt"
 	"time"
 
-	userEntity "github.com/JubaerHossain/restaurant-golang/domain/entity"
-	"github.com/JubaerHossain/restaurant-golang/pkg/core/entity"
-	"github.com/JubaerHossain/restaurant-golang/pkg/core/logger"
-	utilQuery "github.com/JubaerHossain/restaurant-golang/pkg/query"
+	userEntity "github.com/JubaerHossain/rootx/domain/entity"
+	"github.com/JubaerHossain/rootx/pkg/core/entity"
+	"github.com/JubaerHossain/rootx/pkg/core/logger"
+	utilQuery "github.com/JubaerHossain/rootx/pkg/query"
 	"gorm.io/gorm"
 )
 

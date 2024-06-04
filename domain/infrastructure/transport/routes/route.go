@@ -3,15 +3,15 @@ package routes
 import (
 	"net/http"
 
-	"github.com/JubaerHossain/restaurant-golang/pkg/core/app"
-	"github.com/JubaerHossain/restaurant-golang/pkg/core/health"
-	"github.com/JubaerHossain/restaurant-golang/pkg/core/middleware"
-	"github.com/JubaerHossain/restaurant-golang/pkg/core/monitor"
-	"github.com/JubaerHossain/restaurant-golang/pkg/utils"
+	"github.com/JubaerHossain/rootx/pkg/core/app"
+	"github.com/JubaerHossain/rootx/pkg/core/health"
+	"github.com/JubaerHossain/rootx/pkg/core/middleware"
+	"github.com/JubaerHossain/rootx/pkg/core/monitor"
+	"github.com/JubaerHossain/rootx/pkg/utils"
 )
 
 // WebRouter registers routes for web endpoints
-func WebRouter(application *app.App) http.Handler {
+func Router(application *app.App) http.Handler {
 	router := http.NewServeMux()
 
 	// Register health check endpoint
@@ -25,5 +25,6 @@ func WebRouter(application *app.App) http.Handler {
 		utils.WriteJSONResponse(w, http.StatusOK, map[string]interface{}{"message": "Welcome to the API"})
 	}))))
 
-	return router
+	// Add Prometheus middleware to monitor all requests
+	return middleware.PrometheusMiddleware(router, monitor.RequestsTotal(), monitor.RequestDuration())
 }

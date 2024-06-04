@@ -3,8 +3,8 @@ package api
 import (
 	"net/http"
 
-	apiHandler "github.com/JubaerHossain/restaurant-golang/domain/infrastructure/transport/http/api"
-	"github.com/JubaerHossain/restaurant-golang/pkg/core/app"
+	apiHandler "github.com/JubaerHossain/rootx/domain/infrastructure/transport/http/api"
+	"github.com/JubaerHossain/rootx/pkg/core/app"
 )
 
 // APIRouter registers routes for API endpoints

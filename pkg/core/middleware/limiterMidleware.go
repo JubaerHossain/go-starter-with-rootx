@@ -4,9 +4,9 @@ import (
 	"net/http"
 	"time"
 
-	"github.com/JubaerHossain/restaurant-golang/pkg/core/config"
-	"github.com/JubaerHossain/restaurant-golang/pkg/core/limiter"
-	"github.com/JubaerHossain/restaurant-golang/pkg/utils"
+	"github.com/JubaerHossain/rootx/pkg/core/config"
+	"github.com/JubaerHossain/rootx/pkg/core/limiter"
+	"github.com/JubaerHossain/rootx/pkg/utils"
 	"golang.org/x/time/rate"
 )
 

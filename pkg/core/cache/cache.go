@@ -6,7 +6,7 @@ import (
 	"fmt"
 	"time"
 
-	"github.com/JubaerHossain/restaurant-golang/pkg/core/config"
+	"github.com/JubaerHossain/rootx/pkg/core/config"
 	"github.com/go-redis/redis/v8"
 )
 

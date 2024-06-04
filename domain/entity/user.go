@@ -3,7 +3,7 @@ package entity
 import (
 	"time"
 
-	"github.com/JubaerHossain/restaurant-golang/pkg/core/entity"
+	"github.com/JubaerHossain/rootx/pkg/core/entity"
 )
 
 // User represents the user entity

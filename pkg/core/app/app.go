@@ -11,10 +11,10 @@ import (
 	"syscall" // Add this import
 	"time"
 
-	"github.com/JubaerHossain/restaurant-golang/pkg/core/cache"
-	"github.com/JubaerHossain/restaurant-golang/pkg/core/config"
-	"github.com/JubaerHossain/restaurant-golang/pkg/core/database"
-	"github.com/JubaerHossain/restaurant-golang/pkg/core/logger"
+	"github.com/JubaerHossain/rootx/pkg/core/cache"
+	"github.com/JubaerHossain/rootx/pkg/core/config"
+	"github.com/JubaerHossain/rootx/pkg/core/database"
+	"github.com/JubaerHossain/rootx/pkg/core/logger"
 	"github.com/jackc/pgx/v5/pgxpool"
 	"go.uber.org/zap"
 )
@@ -64,7 +64,7 @@ func StartApp() (*App, error) {
 		HttpPort:     httpPort,
 		BuildVersion: config.GlobalConfig.AppEnv,
 		Cache:        cacheService,
-		DB:       dbPool,
+		DB:           dbPool,
 		Logger:       logger.Logger,
 	}
 

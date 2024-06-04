@@ -7,9 +7,9 @@ import (
 	"strings"
 	"time"
 
-	userEntity "github.com/JubaerHossain/restaurant-golang/domain/entity"
-	"github.com/JubaerHossain/restaurant-golang/pkg/core/config"
-	"github.com/JubaerHossain/restaurant-golang/pkg/core/entity"
+	userEntity "github.com/JubaerHossain/rootx/domain/entity"
+	"github.com/JubaerHossain/rootx/pkg/core/config"
+	"github.com/JubaerHossain/rootx/pkg/core/entity"
 	"github.com/golang-jwt/jwt/v4"
 )
 

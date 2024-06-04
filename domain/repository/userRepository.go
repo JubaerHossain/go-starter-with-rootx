@@ -3,7 +3,7 @@ package repository
 import (
 	"net/http"
 
-	"github.com/JubaerHossain/restaurant-golang/domain/entity"
+	"github.com/JubaerHossain/rootx/domain/entity"
 )
 
 // UserRepository defines methods for user data access
@@ -12,7 +12,7 @@ type UserRepository interface {
 	GetUserByID(userID uint) (*entity.User, error)
 	GetUser(userID uint) (*entity.ResponseUser, error)
 	GetUserDetails(userID uint) (*entity.ResponseUser, error)
-	CreateUser(user *entity.ValidateUser, r *http.Request) (error)
+	CreateUser(user *entity.ValidateUser, r *http.Request) error
 	UpdateUser(oldUser *entity.User, user *entity.UpdateUser, req *http.Request) (*entity.User, error)
 	DeleteUser(user *entity.User, req *http.Request) error
 	ChangePassword(oldUser *entity.User, user *entity.UserPasswordChange, r *http.Request) error

@@ -6,7 +6,7 @@ import (
 	"net/http"
 	"time"
 
-	"github.com/JubaerHossain/restaurant-golang/pkg/core/logger"
+	"github.com/JubaerHossain/rootx/pkg/core/logger"
 	"go.uber.org/zap"
 )
 

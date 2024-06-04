@@ -4,9 +4,9 @@ import (
 	"context"
 	"net/http"
 
-	"github.com/JubaerHossain/restaurant-golang/pkg/core/auth"
-	"github.com/JubaerHossain/restaurant-golang/pkg/core/entity"
-	"github.com/JubaerHossain/restaurant-golang/pkg/utils"
+	"github.com/JubaerHossain/rootx/pkg/core/auth"
+	"github.com/JubaerHossain/rootx/pkg/core/entity"
+	"github.com/JubaerHossain/rootx/pkg/utils"
 )
 
 func Authenticate(next http.Handler) http.Handler {
