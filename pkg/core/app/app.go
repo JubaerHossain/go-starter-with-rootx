@@ -83,12 +83,14 @@ func initDatabase() (*pgxpool.Pool, error) {
 
 	if config.GlobalConfig.Migrate {
 		if err := dbService.Migrate(); err != nil {
+			logger.Logger.Error("Failed to migrate database", zap.Error(err))
 			return nil, err
 		}
 	}
 
 	if config.GlobalConfig.Seed {
 		if err := dbService.Seed(); err != nil {
+			logger.Logger.Error("Failed to seed database", zap.Error(err))
 			return nil, err
 		}
 	}

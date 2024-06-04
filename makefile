@@ -3,6 +3,8 @@ IMAGE_NAME := golang-restaurant-image
 CONTAINER_NAME := golang-restaurant-container
 
 # Targets
+migrate-create:
+    migrate create -ext sql -dir migrations -seq $(name)
 install:
 	go mod tidy
 	swag init -g ./cmd/server/main.go
@@ -51,4 +53,4 @@ cpu:
 command:
 	go run ./cmd/clid create github.com/JubaerHossain/rootx ${name}
 
-.PHONY: install seed dev web build run deploy docker-stop docker-remove docker-clean command
+.PHONY: install seed dev web build run deploy docker-stop docker-remove docker-clean command cpu docs migrate-create

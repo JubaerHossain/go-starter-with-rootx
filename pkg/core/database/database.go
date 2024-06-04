@@ -9,7 +9,6 @@ import (
 	"time"
 
 	"github.com/JubaerHossain/rootx/pkg/core/config"
-	"github.com/JubaerHossain/rootx/pkg/core/database/seed"
 	"github.com/jackc/pgx/v5/pgxpool"
 )
 
@@ -98,10 +97,48 @@ func (db *PgxDatabaseService) executeSQLFiles(directory string) error {
 }
 
 func (db *PgxDatabaseService) Seed() error {
-	if err := seed.NewSeed(db.pool); err != nil {
-		return fmt.Errorf("failed to seed database: %w", err)
+	return db.ExecuteSeeders("seeds")
+}
+
+func (db *PgxDatabaseService) ExecuteSeeders(directory string) error {
+	entries, err := os.ReadDir(directory)
+	if err != nil {
+		return fmt.Errorf("failed to read directory: %w", err)
 	}
-	log.Println("database seeding completed")
+
+	for _, entry := range entries {
+		if entry.IsDir() {
+			continue
+		}
+
+		filePath := filepath.Join(directory, entry.Name())
+		content, err := os.ReadFile(filePath)
+		if err != nil {
+			return fmt.Errorf("failed to read file %s: %w", filePath, err)
+		}
+
+		tx, err := db.pool.Begin(context.Background())
+		if err != nil {
+			return fmt.Errorf("failed to begin transaction: %w", err)
+		}
+		defer func() {
+			if err != nil {
+				tx.Rollback(context.Background())
+				return
+			}
+			err = tx.Commit(context.Background())
+			if err != nil {
+				fmt.Println("Error committing transaction for file", filePath, ":", err)
+			}
+		}()
+
+		_, err = tx.Exec(context.Background(), string(content))
+		if err != nil {
+			return fmt.Errorf("failed to execute file %s: %w", filePath, err)
+		}
+	}
+
+	log.Printf("%s files executed successfully", directory)
 	return nil
 }
 

@@ -57,7 +57,7 @@ func (r *UserRepositoryImpl) GetAllUsers(req *http.Request) (*entity.ResponsePag
 	}
 
 	users := []*entity.ResponseUser{}
-	query := "SELECT * FROM users" // Example SQL query
+	query := "SELECT id, name, phone, role, status, created_at FROM users" // Example SQL query
 
 	// Get database connection from pool
 	conn, err := r.app.DB.Acquire(ctx)
@@ -76,7 +76,7 @@ func (r *UserRepositoryImpl) GetAllUsers(req *http.Request) (*entity.ResponsePag
 	// Iterate over the rows and parse the results
 	for rows.Next() {
 		var user entity.ResponseUser
-		err := rows.Scan(&user.ID, &user.Name) // Example scan, update according to your database schema
+		err := rows.Scan(&user.ID, &user.Name, &user.Phone, &user.Role, &user.Status, &user.CreatedAt)
 		if err != nil {
 			return nil, err
 		}
@@ -103,6 +103,7 @@ func (r *UserRepositoryImpl) GetAllUsers(req *http.Request) (*entity.ResponsePag
 	}
 	return &response, nil
 }
+
 
 // GetUserByID returns a user by ID from the database
 func (r *UserRepositoryImpl) GetUserByID(userID uint) (*entity.User, error) {
