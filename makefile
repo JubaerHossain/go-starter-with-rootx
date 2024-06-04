@@ -2,14 +2,8 @@
 IMAGE_NAME := go-starter-image
 CONTAINER_NAME := go-starter-container
 
-migration:
-	go run cmd/db/main.go create-migration name=$(name) table=$(table)
-
-apply-migrations:
-	go run cmd/db/main.go apply-migrations
-
-run-seeders:
-	go run cmd/db/main.go run-seeders
+rootx:
+	go run cmd/db/main.go
 
 install:
 	go mod tidy

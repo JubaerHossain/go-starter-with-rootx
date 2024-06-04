@@ -1,16 +1,18 @@
 package main
 
 import (
+	"bufio"
 	"context"
 	"fmt"
 	"io/ioutil"
 	"log"
 	"os"
 	"path/filepath"
+	"strings"
 	"time"
 
-	"github.com/JubaerHossain/rootx/pkg/core/config"
 	"github.com/jackc/pgx/v5/pgxpool"
+	"github.com/spf13/viper"
 )
 
 func main() {
@@ -21,34 +23,74 @@ func main() {
 	}
 	defer pool.Close()
 
-	// Run migration creation
-	migrationName := "migration_name"
-	if err := createMigrationFile(migrationName); err != nil {
-		log.Fatalf("Failed to create migration: %v", err)
+	// Display the command options
+	showCommandOptions()
+
+	// Prompt user to select a command
+	command := getUserInput("Enter the command number: ")
+
+	// Perform action based on the selected command
+	switch command {
+	case "1":
+		migrationName := getUserInput("Enter migration name: ")
+		if err := createMigrationFile(migrationName); err != nil {
+			log.Fatalf("Failed to create migration: %v", err)
+		}
+	case "2":
+		if err := applyMigrations(pool); err != nil {
+			log.Fatalf("Failed to apply migrations: %v", err)
+		}
+	case "3":
+		if err := runSeeders(pool); err != nil {
+			log.Fatalf("Failed to run seeders: %v", err)
+		}
+	default:
+		fmt.Println("Invalid command")
 	}
 
-	// Apply migrations
-	if err := applyMigrations(pool); err != nil {
-		log.Fatalf("Failed to apply migrations: %v", err)
-	}
+	fmt.Println("Task completed successfully")
+}
 
-	// Run seeders
-	if err := runSeeders(pool); err != nil {
-		log.Fatalf("Failed to run seeders: %v", err)
-	}
+func showCommandOptions() {
+	fmt.Println("\x1b[35mSelect a command:\x1b[0m")
+	fmt.Println("\x1b[32m1. Create Migration\x1b[0m")
+	fmt.Println("\x1b[33m2. Apply Migrations\x1b[0m")
+	fmt.Println("\x1b[34m3. Run Seeders\x1b[0m")
+}
 
-	fmt.Println("Migration creation, migration application, and seeding completed successfully")
+func getUserInput(prompt string) string {
+	fmt.Print(prompt)
+	reader := bufio.NewReader(os.Stdin)
+	input, _ := reader.ReadString('\n')
+	return strings.TrimSpace(input)
 }
 
 func connectDB() (*pgxpool.Pool, error) {
-	cfg := config.GlobalConfig
-	dsn := fmt.Sprintf("postgres://%s:%s@%s:%d/%s?sslmode=disable",
-		cfg.DBUser, cfg.DBPassword, cfg.DBHost, cfg.DBPort, cfg.DBName)
+	// Load configuration from environment file
+	viper.SetConfigFile(".env")
+	if err := viper.ReadInConfig(); err != nil {
+		return nil, fmt.Errorf("failed to read config file: %w", err)
+	}
+
+	// Retrieve database configuration
+	dbUser := viper.GetString("DB_USER")
+	dbPassword := viper.GetString("DB_PASSWORD")
+	dbHost := viper.GetString("DB_HOST")
+	dbPort := viper.GetInt("DB_PORT")
+	dbName := viper.GetString("DB_NAME")
+
+	dsn := fmt.Sprintf("postgres://%s:%s@%s:%d/%s?sslmode=disable", dbUser, dbPassword, dbHost, dbPort, dbName)
+	fmt.Println("Database URL:", dsn)
 
 	config, err := pgxpool.ParseConfig(dsn)
 	if err != nil {
 		return nil, fmt.Errorf("failed to parse database URL: %w", err)
 	}
+
+	config.MaxConnIdleTime = 10 * time.Minute
+	config.MaxConnLifetime = 60 * time.Minute // Set to 1 hour
+	config.MaxConns = 5000                    // Adjust based on your environment
+	config.MinConns = 100
 
 	return pgxpool.NewWithConfig(context.Background(), config)
 }
