@@ -37,10 +37,15 @@ func main() {
 			log.Fatalf("Failed to create migration: %v", err)
 		}
 	case "2":
+		migrationName := getUserInput("Enter migration name: ")
+		if err := createMigrationFileWithSeeder(migrationName); err != nil {
+			log.Fatalf("Failed to create migration: %v", err)
+		}
+	case "3":
 		if err := applyMigrations(pool); err != nil {
 			log.Fatalf("Failed to apply migrations: %v", err)
 		}
-	case "3":
+	case "4":
 		if err := runSeeders(pool); err != nil {
 			log.Fatalf("Failed to run seeders: %v", err)
 		}
@@ -52,18 +57,28 @@ func main() {
 }
 
 func showCommandOptions() {
-	fmt.Println("\x1b[35mSelect a command:\x1b[0m")
-	fmt.Println("\x1b[32m1. Create Migration\x1b[0m")
-	fmt.Println("\x1b[33m2. Apply Migrations\x1b[0m")
-	fmt.Println("\x1b[34m3. Run Seeders\x1b[0m")
+    fmt.Println("\x1b[35mSelect a command:\x1b[0m")
+    fmt.Println("\x1b[32m1. Create Migration\x1b[0m")
+    fmt.Println("\x1b[37m2. Create Migration with Seeder\x1b[0m")
+    fmt.Println("\x1b[33m3. Apply Migrations\x1b[0m")
+    fmt.Println("\x1b[34m4. Run Seeders\x1b[0m")
 }
 
+
 func getUserInput(prompt string) string {
-	fmt.Print(prompt)
-	reader := bufio.NewReader(os.Stdin)
-	input, _ := reader.ReadString('\n')
-	return strings.TrimSpace(input)
+    // ANSI escape code for green color
+    green := "\033[32m"
+    // ANSI escape code to reset color
+    reset := "\033[0m"
+
+    // Print prompt in green color
+    fmt.Print(green + prompt + reset)
+
+    reader := bufio.NewReader(os.Stdin)
+    input, _ := reader.ReadString('\n')
+    return strings.TrimSpace(input)
 }
+
 
 func connectDB() (*pgxpool.Pool, error) {
 	// Load configuration from environment file
@@ -80,7 +95,6 @@ func connectDB() (*pgxpool.Pool, error) {
 	dbName := viper.GetString("DB_NAME")
 
 	dsn := fmt.Sprintf("postgres://%s:%s@%s:%d/%s?sslmode=disable", dbUser, dbPassword, dbHost, dbPort, dbName)
-	fmt.Println("Database URL:", dsn)
 
 	config, err := pgxpool.ParseConfig(dsn)
 	if err != nil {
@@ -96,27 +110,62 @@ func connectDB() (*pgxpool.Pool, error) {
 }
 
 func createMigrationFile(name string) error {
-	fmt.Println("Creating migration file...")
-	fmt.Printf("Migration name: %s\n", name)
+    fmt.Println("Creating migration file...")
+    fmt.Printf("Migration name: %s\n", name)
 
-	timestamp := time.Now().Format("20060102150405")
-	filename := filepath.Join("migrations", fmt.Sprintf("%s-%s.sql", timestamp, name))
-	content := fmt.Sprintf("-- Migration %s\n\n", name) +
-		fmt.Sprintf("CREATE TABLE IF NOT EXISTS %s (\n", name) +
-		"    id SERIAL PRIMARY KEY,\n" +
-		"    name VARCHAR(100) NOT NULL,\n" +
-		"    description TEXT NOT NULL,\n" +
-		"    created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,\n" +
-		"    updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP\n" +
-		");\n"
+    timestamp := time.Now().Format("2006_01_02_150405")
+    filename := filepath.Join("migrations", fmt.Sprintf("%s_%s.sql", timestamp, name))
+    content := fmt.Sprintf("-- Migration %s\n\n", name) +
+        fmt.Sprintf("CREATE TABLE IF NOT EXISTS %s (\n", name) +
+        "    id SERIAL PRIMARY KEY,\n" +
+        "    name VARCHAR(100) NOT NULL,\n" +
+        "    description TEXT NOT NULL,\n" +
+        "    created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,\n" +
+        "    updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP\n" +
+        ");\n\n" +
+        fmt.Sprintf("CREATE INDEX ON %s (name);\n", name) // Modify column_name with the actual column name
 
-	if err := os.WriteFile(filename, []byte(content), 0644); err != nil {
-		return fmt.Errorf("failed to create migration file: %w", err)
+    if err := os.WriteFile(filename, []byte(content), 0644); err != nil {
+        return fmt.Errorf("failed to create migration file: %w", err)
+    }
+
+    fmt.Printf("Migration file created: %s\n", filename)
+    return nil
+}
+
+func createSeedFile(tableName string) error {
+    fmt.Println("Creating seed file...")
+    fmt.Printf("Seed table name: %s\n", tableName)
+
+    timestamp := time.Now().Format("2006_01_02_150405")
+    filename := filepath.Join("seeds", fmt.Sprintf("%s_%s_seeder.sql", timestamp, tableName))
+    content := fmt.Sprintf("-- Seeder for table %s\n\n", tableName) +
+        fmt.Sprintf("INSERT INTO %s (name, description, created_at, updated_at) VALUES\n", tableName) +
+        "    ('Value1', 'Description 1', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),\n" +
+        "    ('Value2', 'Description 2', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);\n"
+
+    if err := os.WriteFile(filename, []byte(content), 0644); err != nil {
+        return fmt.Errorf("failed to create seed file: %w", err)
+    }
+
+    fmt.Printf("Seed file created: %s\n", filename)
+    return nil
+}
+
+func createMigrationFileWithSeeder(name string) error {
+	if err := createMigrationFile(name); err != nil {
+		return err
 	}
 
-	fmt.Printf("Migration file created: %s\n", filename)
+	tableName := strings.ToLower(name)
+	if err := createSeedFile(tableName); err != nil {
+		return err
+	}
+
 	return nil
 }
+
+
 
 func applyMigrations(pool *pgxpool.Pool) error {
 	fmt.Println("Applying migrations...")
