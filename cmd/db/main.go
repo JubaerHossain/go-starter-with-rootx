@@ -57,12 +57,20 @@ func main() {
 }
 
 func showCommandOptions() {
+    fmt.Println(`
+   ___  ____  ____  _______  __
+  / _ \/ __ \/ __ \/_  __/ |/_/
+ / , _/ /_/ / /_/ / / / _>  <  
+/_/|_|\____/\____/ /_/ /_/|_|  
+								 
+`)
     fmt.Println("\x1b[35mSelect a command:\x1b[0m")
     fmt.Println("\x1b[32m1. Create Migration\x1b[0m")
     fmt.Println("\x1b[37m2. Create Migration with Seeder\x1b[0m")
     fmt.Println("\x1b[33m3. Apply Migrations\x1b[0m")
     fmt.Println("\x1b[34m4. Run Seeders\x1b[0m")
 }
+
 
 
 func getUserInput(prompt string) string {
