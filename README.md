@@ -11,8 +11,18 @@
 
 
 
-## Overview
-This project is structured to demonstrate a comprehensive web application with a variety of features, including authentication, caching, database interaction, middleware for HTTP requests, and background task processing. It is organized into different directories, each serving a distinct purpose.
+🚀 Go Starter with Postgres + Go + Swagger Default Auth + REST API + Cache Middleware + Goroutines 🚀
+
+A comprehensive starter kit for building RESTful APIs in Go with PostgreSQL as the database backend. This starter kit includes Swagger for API documentation, default authentication setup, dynamic tooling for database migrations and CRUD API generation, cache middleware for performance optimization, and goroutines for concurrent execution. Kickstart your Go project with ease and efficiency!
+
+Features:
+- PostgreSQL database integration
+- RESTful API endpoints
+- Swagger documentation
+- Default authentication setup
+- Dynamic tooling for database migrations and CRUD API generation
+- Cache middleware for performance optimization
+- Goroutines for concurrent execution
 
 
 
